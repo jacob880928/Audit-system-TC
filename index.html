@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>藥品稽核系統｜台中慈濟醫院</title>
+<style>
+  :root {
+    --primary: #1a5fa8;
+    --primary-light: #e8f1fb;
+    --primary-mid: #4a8fd4;
+    --success: #0f6e56;
+    --success-light: #e1f5ee;
+    --danger: #a32d2d;
+    --danger-light: #fcebeb;
+    --warning: #854f0b;
+    --warning-light: #faeeda;
+    --gray: #5f5e5a;
+    --gray-light: #f1efe8;
+    --border: #d3d1c7;
+    --text: #2c2c2a;
+    --text-muted: #888780;
+    --bg: #fff;
+    --bg-secondary: #f8f7f4;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    /* Mobile touch targets */
+    --touch-min: 48px;
+    --input-height: 48px;
+    --font-base: 16px;
+    --font-sm: 14px;
+    --font-xs: 13px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html { font-size: var(--font-base); }
+
+  body {
+    font-family: 'Noto Sans TC', 'Microsoft JhengHei', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-secondary);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--primary);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .site-header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .site-title { font-size: 15px; font-weight: 700; line-height: 1.3; }
+  .site-subtitle { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+  .header-nav { display: flex; gap: 6px; flex-shrink: 0; }
+  .nav-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: #fff;
+    padding: 0 14px;
+    height: 38px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    transition: background 0.15s;
+    -webkit-appearance: none;
+  }
+  .nav-btn:active { background: rgba(255,255,255,0.35); }
+  .nav-btn.active { background: #fff; color: var(--primary); }
+
+  /* ── Layout ── */
+  .main { max-width: 960px; margin: 0 auto; padding: 16px; }
+
+  /* ── Page ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 18px 16px;
+    margin-bottom: 14px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 16px;
+    background: var(--primary);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── Forms ── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  @media (min-width: 600px) {
+    .form-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0 14px;
+    height: var(--input-height);
+    font-size: var(--font-base);
+    color: var(--text);
+    background: var(--bg);
+    font-family: inherit;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+  }
+  .form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+  .form-group textarea {
+    height: auto;
+    padding: 12px 14px;
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-mid);
+    box-shadow: 0 0 0 3px rgba(26,95,168,0.12);
+  }
+
+  /* ── Drug cards (mobile-first) ── */
+  .drug-section-header {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 8px;
+    margin: 16px 0 10px;
+  }
+
+  /* Mobile: each drug is a card */
+  .drug-card {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 10px;
+    background: var(--bg);
+  }
+  .drug-card-name {
+    font-size: var(--font-sm);
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+  .drug-card-name.controlled { color: var(--primary); }
+  .drug-card-name.controlled::before { content: '★ '; }
+  .limit-badge {
+    display: inline-block;
+    background: var(--warning-light);
+    color: var(--warning);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-left: 6px;
+  }
+
+  .drug-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .drug-field { display: flex; flex-direction: column; gap: 4px; }
+  .drug-field-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .drug-field input[type=number] {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0 12px;
+    height: 44px;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text);
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .drug-field input[type=number]:focus {
+    outline: none;
+    border-color: var(--primary-mid);
+    box-shadow: 0 0 0 3px rgba(26,95,168,0.12);
+  }
+  .drug-field input[type=text] {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0 10px;
+    height: 44px;
+    font-size: var(--font-sm);
+    color: var(--text);
+    width: 100%;
+    -webkit-appearance: none;
+  }
+  .drug-field input[type=text]:focus {
+    outline: none;
+    border-color: var(--primary-mid);
+    box-shadow: 0 0 0 3px rgba(26,95,168,0.12);
+  }
+
+  /* Radio groups as big toggle buttons */
+  .radio-toggle-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .radio-toggle-group input[type=radio] { display: none; }
+  .radio-toggle-group label {
+    flex: 1;
+    min-width: 60px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+    transition: all 0.12s;
+    user-select: none;
+  }
+  .radio-toggle-group input[type=radio]:checked + label {
+    border-width: 2px;
+  }
+  .radio-toggle-group.exp input[type=radio][value="是"]:checked + label { background: var(--success-light); color: var(--success); border-color: var(--success); }
+  .radio-toggle-group.exp input[type=radio][value="否"]:checked + label { background: var(--danger-light); color: var(--danger); border-color: var(--danger); }
+  .radio-toggle-group.pkg input[type=radio][value="正常"]:checked + label { background: var(--success-light); color: var(--success); border-color: var(--success); }
+  .radio-toggle-group.pkg input[type=radio][value="污染"]:checked + label { background: var(--danger-light); color: var(--danger); border-color: var(--danger); }
+  .radio-toggle-group.pkg input[type=radio][value="破損"]:checked + label { background: var(--danger-light); color: var(--danger); border-color: var(--danger); }
+
+  /* Desktop: show as table */
+  @media (min-width: 768px) {
+    .drug-card { display: none; }
+    .drug-table-wrap { display: block; overflow-x: auto; }
+    .drug-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 680px; }
+    .drug-table th { background: var(--gray-light); padding: 8px 10px; text-align: left; font-weight: 600; font-size: 12px; color: var(--gray); border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .drug-table td { padding: 7px 10px; border-bottom: 1px solid #f0eeea; vertical-align: middle; }
+    .drug-table tr:last-child td { border-bottom: none; }
+    .drug-table tr:hover td { background: #fafaf8; }
+    .drug-table input[type=number] { width: 72px; border: 1px solid var(--border); border-radius: 4px; padding: 4px 7px; font-size: 13px; text-align: center; }
+    .drug-table input[type=text] { width: 110px; border: 1px solid var(--border); border-radius: 4px; padding: 4px 7px; font-size: 12px; }
+    .table-radio-group { display: flex; gap: 10px; font-size: 12px; white-space: nowrap; }
+    .table-radio-group label { display: flex; align-items: center; gap: 3px; cursor: pointer; }
+    .table-radio-group input[type=radio] { accent-color: var(--primary); }
+  }
+  @media (max-width: 767px) {
+    .drug-table-wrap { display: none; }
+    .drug-card { display: block; }
+  }
+
+  /* ── Check items ── */
+  .check-item-card {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 10px;
+    background: var(--bg);
+  }
+  .check-item-text { font-size: var(--font-sm); line-height: 1.55; margin-bottom: 10px; color: var(--text); }
+  .check-item-controls { display: flex; flex-direction: column; gap: 8px; }
+  .check-item-row { display: flex; gap: 6px; }
+  .check-item-remark input {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0 12px;
+    height: 40px;
+    font-size: var(--font-sm);
+    color: var(--text);
+    width: 100%;
+    font-family: inherit;
+  }
+  .check-radio-group { display: flex; gap: 6px; }
+  .check-radio-group input[type=radio] { display: none; }
+  .check-radio-group label {
+    flex: 1;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+    user-select: none;
+  }
+  .check-radio-group input[value="是"]:checked + label { background: var(--success-light); color: var(--success); border-color: var(--success); border-width: 2px; }
+  .check-radio-group input[value="否"]:checked + label { background: var(--danger-light); color: var(--danger); border-color: var(--danger); border-width: 2px; }
+  .check-radio-group input[value="不適用"]:checked + label { background: var(--gray-light); color: var(--gray); border-color: var(--gray); border-width: 2px; }
+
+  /* ── Signatures ── */
+  .sig-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 600px) {
+    .sig-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+  .sig-box {
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    padding: 12px 10px 10px;
+    text-align: center;
+  }
+  .sig-label { font-size: 11px; color: var(--text-muted); font-weight: 700; letter-spacing: 0.04em; margin-bottom: 8px; text-transform: uppercase; }
+  .sig-box input {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid var(--border);
+    text-align: center;
+    font-size: var(--font-base);
+    padding: 6px 0;
+    background: transparent;
+    font-family: inherit;
+  }
+  .sig-box input:focus { outline: none; border-bottom-color: var(--primary-mid); }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 22px;
+    height: var(--touch-min);
+    border-radius: 10px;
+    font-size: var(--font-sm);
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s, transform 0.1s;
+    font-family: inherit;
+    -webkit-appearance: none;
+    white-space: nowrap;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-success { background: var(--success); color: #fff; }
+  .btn-outline { background: var(--bg); color: var(--primary); border: 1.5px solid var(--primary); }
+  .btn-outline:active { background: var(--primary-light); }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .btn-row .btn { flex: 1; min-width: 120px; }
+
+  /* ── Follow-up ── */
+  .fu-row {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+  }
+  .fu-row-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .fu-delete {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--danger);
+    background: var(--danger-light);
+    color: var(--danger);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+  }
+
+  /* ── Admin stats ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  @media (min-width: 600px) {
+    .stats-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+  .stat-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .stat-num { font-size: 26px; font-weight: 700; color: var(--primary); }
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
+
+  /* ── Records ── */
+  .record-list { display: flex; flex-direction: column; gap: 8px; }
+  .record-item {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+  }
+  .record-item:active { box-shadow: var(--shadow); }
+  .record-item-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+  .record-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .badge-done { background: var(--success-light); color: var(--success); }
+  .badge-issue { background: var(--danger-light); color: var(--danger); }
+  .record-unit { font-weight: 700; font-size: 15px; }
+  .audit-number-badge {
+    background: var(--primary);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .record-meta { font-size: 12px; color: var(--text-muted); }
+  .record-item-btns { display: flex; gap: 6px; margin-top: 10px; }
+  .record-item-btns .btn { flex: 1; height: 38px; font-size: 12px; }
+
+  /* ── Filter bar ── */
+  .filter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  @media (min-width: 600px) {
+    .filter-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+  .filter-grid select,
+  .filter-grid input {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0 12px;
+    height: 40px;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--bg);
+    width: 100%;
+    font-family: inherit;
+    -webkit-appearance: none;
+  }
+  .filter-grid select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+  }
+
+  /* ── Analysis ── */
+  .analysis-bar { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid #f0eeea; font-size: 13px; }
+  .analysis-bar:last-child { border-bottom: none; }
+  .bar-track { flex: 1; height: 10px; background: var(--gray-light); border-radius: 5px; overflow: hidden; min-width: 60px; }
+  .bar-fill { height: 100%; border-radius: 5px; }
+  .bar-ok { background: var(--success); }
+  .bar-warn { background: #ef9f27; }
+  .bar-err { background: var(--danger); }
+  .bar-label { min-width: 80px; font-weight: 600; font-size: 12px; }
+  .bar-pct { min-width: 36px; text-align: right; font-size: 12px; color: var(--text-muted); }
+  .issue-tag { display: inline-block; background: var(--danger-light); color: var(--danger); font-size: 11px; padding: 2px 7px; border-radius: 4px; margin: 2px; font-weight: 700; }
+
+  /* ── Toast ── */
+  .toast-wrap { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; width: 90%; max-width: 360px; }
+  .toast { background: #2c2c2a; color: #fff; padding: 12px 20px; border-radius: 10px; font-size: var(--font-sm); box-shadow: 0 4px 24px rgba(0,0,0,0.22); animation: slideUp 0.2s ease; text-align: center; width: 100%; pointer-events: auto; }
+  .toast.success { background: var(--success); }
+  .toast.danger { background: var(--danger); }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  /* ── Modal ── */
+  .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto; padding: 20px 12px; }
+  .modal-bg.open { display: block; }
+  .modal { background: var(--bg); border-radius: 14px; padding: 20px 16px; max-width: 860px; margin: 0 auto; position: relative; }
+  .modal-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; background: var(--gray-light); border: none; border-radius: 50%; font-size: 18px; cursor: pointer; color: var(--gray); display: flex; align-items: center; justify-content: center; }
+
+  /* ── PIN Modal ── */
+  .pin-modal-inner { max-width: 340px; margin: 60px auto; text-align: center; background: var(--bg); border-radius: 14px; padding: 28px 20px; }
+  .pin-icon { font-size: 40px; margin-bottom: 10px; }
+  .pin-title { font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+  .pin-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+  #pin-input {
+    text-align: center;
+    font-size: 24px;
+    letter-spacing: 8px;
+    width: 160px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px;
+    margin-bottom: 8px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #pin-input:focus { outline: none; border-color: var(--primary-mid); }
+  #pin-error { font-size: 12px; color: var(--danger); min-height: 18px; margin-bottom: 12px; }
+  .pin-btns { display: flex; gap: 8px; justify-content: center; }
+
+  /* ── Empty state ── */
+  .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); }
+  .empty-state .icon { font-size: 44px; margin-bottom: 10px; }
+  .empty-state p { font-size: 15px; }
+
+  @media print {
+    .no-print { display: none !important; }
+    .site-header { position: static; }
+    body { background: white; }
+    .drug-card { display: none !important; }
+    .drug-table-wrap { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <div>
+      <div class="site-title">佛教慈濟醫療財團法人台中慈濟醫院</div>
+      <div class="site-subtitle">各單位常備藥藥品稽核系統</div>
+    </div>
+    <nav class="header-nav no-print">
+      <button class="nav-btn active" id="btn-form" onclick="showPage('form')">📝 稽核表</button>
+      <button class="nav-btn" id="btn-admin" onclick="requestAdmin()">📊 後台</button>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+
+<!-- ══════════ FORM PAGE ══════════ -->
+<div id="page-form" class="page active">
+
+  <div class="card">
+    <div class="card-title">基本資訊</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>查核單位</label>
+        <select id="f-unit" onchange="renderDrugSection()">
+          <option value="">— 請選擇單位 —</option>
+          <option>心導管室</option>
+          <option>核子醫學科</option>
+          <option>影像醫學科</option>
+          <option>眼科</option>
+          <option>內科檢查室</option>
+          <option>震波碎石室</option>
+          <option>支氣管鏡室</option>
+          <option>尿動力檢查室</option>
+          <option>放射腫瘤科</option>
+          <option>心臟血管外科</option>
+          <option>高壓氧治療中心</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>查核日期</label>
+        <input type="date" id="f-date">
+      </div>
+      <div class="form-group">
+        <label>第幾次稽核</label>
+        <select id="f-audit-num">
+          <option value="1">第 1 次</option>
+          <option value="2">第 2 次</option>
+          <option value="3">第 3 次</option>
+          <option value="4">第 4 次</option>
+          <option value="5">第 5 次</option>
+          <option value="6">第 6 次</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div id="drug-section"></div>
+
+  <div class="card" id="check-section" style="display:none">
+    <div class="card-title">稽核項目查核</div>
+    <div id="check-items-container"></div>
+  </div>
+
+  <div class="card" id="remarks-section" style="display:none">
+    <div class="card-title">改善事項</div>
+    <div class="form-group">
+      <label>改善事項說明（單位須於1週內完成）</label>
+      <textarea id="f-remarks" placeholder="請填寫發現的問題及改善事項..."></textarea>
+    </div>
+  </div>
+
+  <div class="card" id="followup-section" style="display:none">
+    <div class="card-title">後續追蹤</div>
+    <div id="followup-rows"></div>
+    <button class="btn btn-outline" style="width:100%;margin-top:4px" onclick="addFollowupRow()">＋ 新增追蹤項目</button>
+  </div>
+
+  <div class="card" id="sig-section" style="display:none">
+    <div class="card-title">簽名欄</div>
+    <div class="sig-grid">
+      <div class="sig-box"><div class="sig-label">單位人員</div><input type="text" id="s-staff" placeholder="姓名"></div>
+      <div class="sig-box"><div class="sig-label">單位主管</div><input type="text" id="s-unit-mgr" placeholder="姓名"></div>
+      <div class="sig-box"><div class="sig-label">稽核藥師</div><input type="text" id="s-pharmacist" placeholder="姓名"></div>
+      <div class="sig-box"><div class="sig-label">查核單位主管</div><input type="text" id="s-audit-mgr" placeholder="姓名"></div>
+    </div>
+    <div class="btn-row no-print">
+      <button class="btn btn-primary" onclick="submitAudit()">💾 送出稽核表</button>
+      <button class="btn btn-outline" onclick="resetForm()">🔄 清除重填</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════ ADMIN PAGE ══════════ -->
+<div id="page-admin" class="page">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <span style="background:var(--success-light);color:var(--success);font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px">🔓 管理員模式</span>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-outline" style="height:38px;font-size:12px;padding:0 14px" onclick="document.getElementById('pin-change-modal').classList.add('open')">🔑 修改PIN</button>
+      <button class="btn" style="height:38px;font-size:12px;padding:0 14px;background:var(--danger);color:#fff" onclick="lockAdmin()">🔒 鎖定</button>
+    </div>
+  </div>
+
+  <div class="stats-grid" id="admin-stats"></div>
+
+  <div class="card">
+    <div class="card-title">稽核記錄查詢</div>
+    <div class="filter-grid no-print">
+      <select id="filter-unit" onchange="renderAdminList()">
+        <option value="">全部單位</option>
+        <option>心導管室</option><option>核子醫學科</option><option>影像醫學科</option>
+        <option>眼科</option><option>內科檢查室</option><option>震波碎石室</option>
+        <option>支氣管鏡室</option><option>尿動力檢查室</option><option>放射腫瘤科</option>
+        <option>心臟血管外科</option><option>高壓氧治療中心</option>
+      </select>
+      <select id="filter-audit-num" onchange="renderAdminList()">
+        <option value="">全部次數</option>
+        <option value="1">第1次</option><option value="2">第2次</option>
+        <option value="3">第3次</option><option value="4">第4次</option>
+        <option value="5">第5次</option><option value="6">第6次</option>
+      </select>
+      <input type="date" id="filter-date-from" onchange="renderAdminList()">
+      <input type="date" id="filter-date-to" onchange="renderAdminList()">
+      <button class="btn btn-outline" style="height:40px;font-size:13px" onclick="resetFilters()">清除篩選</button>
+    </div>
+    <div id="admin-list"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">稽核分析摘要</div>
+    <div id="analysis-content"></div>
+  </div>
+
+  <div class="card no-print">
+    <div class="card-title">資料管理</div>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">匯出所有稽核記錄為 JSON 檔案，或匯入備份資料。</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-outline" style="height:42px;font-size:13px" onclick="exportData()">📤 匯出資料</button>
+      <label class="btn btn-outline" style="height:42px;font-size:13px;cursor:pointer">
+        📥 匯入資料 <input type="file" accept=".json" onchange="importData(event)" style="display:none">
+      </label>
+    </div>
+  </div>
+
+</div>
+
+</main>
+
+<!-- ══════════ PIN MODAL ══════════ -->
+<div class="modal-bg" id="pin-modal">
+  <div class="pin-modal-inner">
+    <div class="pin-icon">🔒</div>
+    <div class="pin-title">後台管理</div>
+    <div class="pin-subtitle">請輸入管理員 PIN 碼</div>
+    <input type="password" id="pin-input" maxlength="8" placeholder="••••" inputmode="numeric"
+      onkeydown="if(event.key==='Enter')checkPin()">
+    <div id="pin-error"></div>
+    <div class="pin-btns">
+      <button class="btn btn-primary" onclick="checkPin()">確認進入</button>
+      <button class="btn btn-outline" onclick="closePinModal()">取消</button>
+    </div>
+    <p style="margin-top:16px;font-size:11px;color:var(--text-muted)">忘記 PIN 碼？請聯繫系統管理員</p>
+  </div>
+</div>
+
+<!-- ══════════ PIN CHANGE MODAL ══════════ -->
+<div class="modal-bg" id="pin-change-modal">
+  <div class="modal" style="max-width:380px;margin:40px auto">
+    <button class="modal-close" onclick="document.getElementById('pin-change-modal').classList.remove('open')">✕</button>
+    <div style="font-size:17px;font-weight:700;color:var(--primary);margin-bottom:20px">🔑 修改管理員 PIN 碼</div>
+    <div class="form-group" style="margin-bottom:12px"><label>目前 PIN 碼</label><input type="password" id="pin-old" maxlength="8" inputmode="numeric"></div>
+    <div class="form-group" style="margin-bottom:12px"><label>新 PIN 碼（4–8碼數字）</label><input type="password" id="pin-new" maxlength="8" inputmode="numeric"></div>
+    <div class="form-group" style="margin-bottom:16px"><label>確認新 PIN 碼</label><input type="password" id="pin-confirm" maxlength="8" inputmode="numeric"></div>
+    <div id="pin-change-error" style="font-size:12px;color:var(--danger);min-height:18px;margin-bottom:10px"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="changePinCode()">儲存</button>
+      <button class="btn btn-outline" onclick="document.getElementById('pin-change-modal').classList.remove('open')">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DETAIL MODAL ══════════ -->
+<div class="modal-bg" id="detail-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────
+const UNITS_DATA = {
+  '心導管室': { sections: [
+    { title: '1-4級管制藥品', drugs: [
+      { name: 'Morphine 10mg/ml/amp', controlled: true, limit: 5 },
+      { name: 'Alfentanil 0.544mg/ml，2ml/amp', controlled: true, limit: 5 },
+      { name: 'Midazolam 5mg/ml/amp', controlled: true, limit: 5 },
+    ]},
+    { title: '常備藥品', drugs: [
+      { name: '2% Lidocaine 20ml/vial', controlled: true, limit: 35 },
+      { name: 'Heparin 25KU/5ml/vial', controlled: true, limit: 50 },
+      { name: 'Tirofiban 12.5mg/50ml/vial', controlled: true, limit: 2 },
+      { name: 'Visipaque 625mg/ml 100ml/bot', controlled: true, limit: 10 },
+      { name: 'Verapamil 5mg/2ml/amp', controlled: true, limit: 20 },
+      { name: 'Adenosin 6mg/2ml/vial', controlled: true, limit: 2 },
+      { name: 'Isoproterenol 0.2mg/ml/amp', controlled: true, limit: 6 },
+      { name: 'Hydrocortisone 100mg/vial', controlled: false, limit: 3 },
+      { name: 'Isosorbide Dinitrate 10mg/10ml/amp', controlled: false, limit: 30 },
+      { name: 'Protamine Sulfate 50mg/5cc/amp', controlled: false, limit: 2 },
+      { name: 'Furosemide 20mg/2ml/amp', controlled: false, limit: 3 },
+      { name: 'Nitroglycerin 0.6mg/tab', controlled: false, limit: 25 },
+      { name: 'Diphenhydramine 30mg/ml/amp', controlled: false, limit: 5 },
+      { name: 'Alcohol 99.5% 5mL/vial', controlled: false, limit: 1 },
+      { name: 'Iohexol 350mg I/mL 100mL/bot', controlled: true, limit: 80 },
+    ]},
+    { title: '大量點滴', drugs: [
+      { name: '0.9% Saline 20ml/amp', controlled: false, limit: 10 },
+      { name: '0.9% Saline 250ml/軟袋', controlled: false, limit: 40 },
+      { name: '0.9% Saline 500ml/軟袋', controlled: false, limit: 100 },
+      { name: 'Aq-dest 20ml/amp', controlled: false, limit: 10 },
+      { name: '0.9% Saline 500ml/塑膠瓶', controlled: false, limit: 140 },
+      { name: '5% Dextrose 250ml/軟袋', controlled: false, limit: 10 },
+      { name: '0.9% Saline 1000ml/軟袋', controlled: false, limit: 36 },
+    ]},
+  ]},
+  '核子醫學科': { sections: [
+    { title: '常備藥品', drugs: [
+      { name: '50% Dextrose 20ml/amp', controlled: true, limit: 15 },
+      { name: 'Dipyridamole 10mg/2ml/amp', controlled: false, limit: 300 },
+      { name: 'Aminophylline 250mg/10ml/amp', controlled: false, limit: 20 },
+      { name: 'Diphenhydramine 30mg/ml/amp', controlled: false, limit: 2 },
+      { name: 'Dexamethasone 4mg/2ml/amp', controlled: false, limit: 2 },
+      { name: 'Furosemide 20mg/2ml/amp', controlled: false, limit: 10 },
+      { name: 'Captopril 25mg/tab', controlled: false, limit: 2 },
+      { name: 'Nitroglycerin 0.6mg/SL tab', controlled: false, limit: 25 },
+      { name: 'Nifedipine 5mg/cap', controlled: false, limit: 1 },
+    ]},
+    { title: '大量點滴', drugs: [
+      { name: '0.9% Saline 20ml/amp', controlled: false, limit: 120 },
+      { name: '0.9% Saline 250ml/軟袋', controlled: false, limit: 1 },
+      { name: 'Dextrose 5% 500ml/bag', controlled: false, limit: 2 },
+      { name: '0.9% Saline 500ml/軟袋', controlled: false, limit: 1 },
+    ]},
+  ]},
+  '影像醫學科': { sections: [
+    { title: '常備藥品', drugs: [
+      { name: '2% Lidocaine 針劑 20ml/vial', controlled: true, limit: 40 },
+      { name: 'Heparin 25KU/5ml/vial', controlled: true, limit: 30 },
+      { name: 'Barium Sulfate 340g/cup', controlled: true, limit: 48 },
+      { name: 'Dotarem 10mmol/20ml/vial', controlled: true, limit: 100 },
+      { name: 'Gadobenate Dimeglumine 20ml/bot', controlled: true, limit: 100 },
+      { name: 'Iodixanol 100ml/bot', controlled: true, limit: 10 },
+      { name: 'Iohexol 350mg 100mL/bot', controlled: true, limit: 180 },
+      { name: 'Iopromide 370mg/ml 200ml/bt', controlled: true, limit: 60 },
+      { name: 'Ioversol 320mg/ml 125ml/bt', controlled: true, limit: 100 },
+      { name: 'Lipiodol 38% 10ml/amp', controlled: true, limit: 30 },
+      { name: 'Xenetix 350 100ml/bot', controlled: true, limit: 250 },
+      { name: 'Tirofiban 12.5mg/50ml/vial', controlled: true, limit: 1 },
+      { name: 'Primovist 0.25mmol/ml 10ml/vial', controlled: true, limit: 5 },
+      { name: 'Patent Blue V 2.5% 2ml/amp', controlled: true, limit: 20 },
+      { name: 'Propranolol 10mg/tab', controlled: false, limit: 20 },
+      { name: 'Protamine Sulfate 50mg/5ml/vial', controlled: false, limit: 2 },
+      { name: 'Hydrocortisone 100mg/vial', controlled: false, limit: 2 },
+      { name: 'Tetracycline 5gm/tube', controlled: false, limit: 5 },
+    ]},
+    { title: '大量點滴', drugs: [
+      { name: '0.9% Saline 1000ml/軟袋', controlled: false, limit: 72 },
+      { name: '0.9% Saline 20ml/amp', controlled: false, limit: 300 },
+      { name: '0.9% Saline 250ml/軟袋', controlled: false, limit: 120 },
+      { name: '0.9% Saline 500ml/軟袋', controlled: false, limit: 60 },
+      { name: '5% Dextrose 250ml/軟袋', controlled: false, limit: 10 },
+      { name: 'Aq-dest 20ml/amp', controlled: false, limit: 120 },
+      { name: '0.9% Saline 500ml/塑膠瓶', controlled: false, limit: 10 },
+      { name: '2% Chlorhexidine 200ml/bot', controlled: false, limit: 10 },
+    ]},
+  ]},
+  '眼科': { sections: [
+    { title: '常備藥品', drugs: [
+      { name: 'Fluorescein Na 10% 5ml/vial', controlled: true, limit: 60 },
+      { name: 'Epinephrine 1mg/ml/amp', controlled: true, limit: 1 },
+      { name: 'Lidocaine 靜注 2% 100mg/5ml/amp', controlled: true, limit: 10 },
+      { name: 'Diphenhydramine 30mg/ml/amp', controlled: false, limit: 3 },
+      { name: 'Dexamethasone 4mg/1ml/amp', controlled: false, limit: 3 },
+    ]},
+    { title: '多人共用藥品', drugs: [
+      { name: 'Mydrin-P Oph soln10ml/bt', controlled: false, limit: 30 },
+      { name: 'Prednisolone 1% 5ml/bt', controlled: false, limit: 5 },
+      { name: 'Proparacaine 0.5% 15ml/bt', controlled: false, limit: 15 },
+      { name: 'Rinderon-A 3g/tube', controlled: false, limit: 10 },
+      { name: 'Sulfamethoxazole Oph 4% 15ml/bt', controlled: false, limit: 30 },
+      { name: 'Tropicamide 0.4% 5ml/bt', controlled: false, limit: 5 },
+      { name: 'Pilocarpine 眼藥水 2% 10ml/bt', controlled: false, limit: 3 },
+      { name: 'Gentamicin 0.3% 5g/tube', controlled: false, limit: 5 },
+    ]},
+    { title: '大量點滴', drugs: [
+      { name: '0.9% Saline 20ml/amp', controlled: false, limit: 120 },
+    ]},
+  ]},
+  '內科檢查室': { sections: [
+    { title: '1-4級管制藥品', drugs: [
+      { name: 'Fentanyl 0.1mg/2ml/amp', controlled: true, limit: 70 },
+      { name: 'Midazolam 5mg/1ml/amp', controlled: true, limit: 80 },
+    ]},
+    { title: '常備藥品', drugs: [
+      { name: 'Lipiodol 38% 10ml/amp', controlled: true, limit: 4 },
+      { name: '2% Lidocaine 針劑 20ml/vial', controlled: true, limit: 5 },
+      { name: 'Epinephrine 1mg/ml/amp', controlled: true, limit: 30 },
+      { name: '50% Dextrose 20ml/amp', controlled: true, limit: 5 },
+      { name: 'Hyoscine 針劑 20mg/ml/amp', controlled: false, limit: 100 },
+      { name: 'Buwecon 口服 0.125mg/tab', controlled: false, limit: 60 },
+      { name: 'Alcohol 99% 5ml/vial', controlled: false, limit: 2 },
+      { name: 'Simethicone Susp 300cc/bt', controlled: false, limit: 10 },
+      { name: 'Naloxone 0.4mg/ml/amp', controlled: false, limit: 1 },
+    ]},
+    { title: '多人共用藥品', drugs: [
+      { name: 'Lidocaine 2% 30g/tube', controlled: false, limit: 20 },
+      { name: 'Lidocaine 10% 50ml/bt', controlled: true, limit: 20 },
+    ]},
+    { title: '大量點滴', drugs: [
+      { name: 'Aq-dest 1000ml/bt', controlled: false, limit: 30 },
+      { name: 'Aq-dest 20ml/amp', controlled: false, limit: 120 },
+      { name: 'N/S 20ml/amp', controlled: false, limit: 120 },
+      { name: 'N/S 250ml/bag', controlled: false, limit: 80 },
+      { name: 'N/S 1000ml/bag', controlled: false, limit: 4 },
+    ]},
+  ]},
+  '震波碎石室': { sections: [
+    { title: '1-4級管制藥品', drugs: [
+      { name: 'Tramadol 100mg/2ml/amp', controlled: true, limit: 15 },
+    ]},
+    { title: '常備藥品', drugs: [
+      { name: 'Urografin 76% 50ml/vial', controlled: true, limit: 5 },
+      { name: 'Ipratropium Nebulizer 500ug/2ml', controlled: false, limit: 3 },
+      { name: 'Terbutaline 5mg/2ml/pill', controlled: false, limit: 3 },
+      { name: 'Nitroglycerin 0.6mg/SL tab', controlled: false, limit: 25 },
+      { name: 'Nifedipine 5mg/cap', controlled: false, limit: 10 },
+      { name: 'Hydrocortisone 100mg/vial', controlled: false, limit: 2 },
+      { name: 'Ketorolac 30mg/amp', controlled: false, limit: 5 },
+    ]},
+    { title: '大量點滴', drugs: [
+      { name: '0.9% Saline 20ml/amp', controlled: false, limit: 120 },
+      { name: '0.9% Saline 500ml/軟袋', controlled: false, limit: 60 },
+      { name: 'Aq-dest 20ml/amp', controlled: false, limit: 5 },
+    ]},
+  ]},
+  '支氣管鏡室': { sections: [
+    { title: '1-4級管制藥品', drugs: [
+      { name: 'Alfentanil 0.544mg/ml 2ml/amp', controlled: true, limit: 5 },
+      { name: 'Midazolam 5mg/1ml/amp', controlled: true, limit: 10 },
+      { name: 'Propofol 200mg/20ml/amp', controlled: true, limit: 8 },
+    ]},
+    { title: '常備藥品', drugs: [
+      { name: 'Epinephrine 1mg/ml/amp', controlled: true, limit: 20 },
+      { name: 'Heparin 25KU/5ml/vial', controlled: true, limit: 1 },
+      { name: 'Lidocaine 2% 100mg/5ml/amp', controlled: true, limit: 5 },
+      { name: 'Ipratropium Nebulizer 500ug/2ml', controlled: false, limit: 2 },
+      { name: 'Terbutaline 5mg/2ml/pill', controlled: false, limit: 2 },
+    ]},
+    { title: '多人共用藥品', drugs: [
+      { name: 'Lidocaine 2% 30g/tube', controlled: false, limit: 6 },
+      { name: 'Lidocaine 10% 50ml/bt', controlled: true, limit: 2 },
+      { name: 'Aq-BI Soln 10% 200ml/bt', controlled: false, limit: 2 },
+      { name: '2% Chlorhexidine 200ml/bot', controlled: false, limit: 6 },
+      { name: 'Berotec N 100mcg/Puff', controlled: false, limit: 6 },
+      { name: '2% Lidocaine 20ml/vial', controlled: true, limit: 20 },
+    ]},
+    { title: '大量點滴', drugs: [
+      { name: 'Aq-dest 1000ml/bt', controlled: false, limit: 6 },
+      { name: '0.9% Saline 20ml/amp', controlled: false, limit: 240 },
+      { name: '0.9% Saline 500ml/軟袋', controlled: false, limit: 30 },
+      { name: 'Aq-dest 20ml/amp', controlled: false, limit: 10 },
+    ]},
+  ]},
+  '尿動力檢查室': { sections: [
+    { title: '常備藥品', drugs: [
+      { name: 'Urografin 76% 50ml/vial', controlled: true, limit: 3 },
+    ]},
+    { title: '多人共用藥品', drugs: [
+      { name: 'Lidocaine 2% 30g/tube', controlled: false, limit: 5 },
+      { name: 'Aq-BI Soln 10% 200ml/bt', controlled: false, limit: 15 },
+      { name: 'Disinfection Spray 500ml/bt', controlled: false, limit: 10 },
+    ]},
+    { title: '大量點滴', drugs: [
+      { name: '0.9% Saline 500ml/軟袋', controlled: false, limit: 30 },
+      { name: 'Aq-dest 1000ml/bt', controlled: false, limit: 10 },
+    ]},
+  ]},
+  '放射腫瘤科': { sections: [
+    { title: '多人共用藥品', drugs: [
+      { name: 'Epinephrine 止血用 0.1% 500ml/bt', controlled: false, limit: 1 },
+      { name: 'Silver Sulfadiazine Cream 1% 400g/bot', controlled: false, limit: 2 },
+    ]},
+    { title: '大量點滴', drugs: [
+      { name: '0.9% Saline 20ml/amp', controlled: false, limit: 120 },
+      { name: 'Aq-BI Soln 10% 200ml/bt', controlled: false, limit: 3 },
+      { name: '2% Chlorhexidine 200ml/bot', controlled: false, limit: 1 },
+    ]},
+  ]},
+  '心臟血管外科': { sections: [
+    { title: '常備藥品', drugs: [
+      { name: 'Nitroglycerin 5mg/10ml/amp', controlled: true, limit: 2 },
+      { name: 'Heparin 25KU/5ml/vial', controlled: true, limit: 10 },
+      { name: 'KCl 針劑 15% 10ml/amp', controlled: true, limit: 6 },
+      { name: 'Lidocaine 靜注 2% 100mg/5ml/amp', controlled: true, limit: 5 },
+      { name: 'Albumin 25% 50ml/bt', controlled: false, limit: 3 },
+      { name: 'Sodium Bicarbonate 7% 20ml/amp', controlled: false, limit: 15 },
+      { name: 'Methylpredinisolone 500mg/vial', controlled: false, limit: 4 },
+      { name: 'Protamine Sulfate 50mg/5ml/vial', controlled: false, limit: 6 },
+      { name: 'Tranexamic Acid 0.5g/5ml/amp', controlled: false, limit: 3 },
+      { name: 'Plegisol 1000ml/bag', controlled: false, limit: 12 },
+      { name: 'Urokinase Injection 60000IU/vial', controlled: false, limit: 20 },
+    ]},
+  ]},
+  '高壓氧治療中心': { sections: [
+    { title: '多人共用藥品', drugs: [
+      { name: 'Bacitracin-Neomycin 外用藥膏 30g/tube', controlled: false, limit: 1 },
+      { name: '2% Chlorhexidine 200ml/bot', controlled: false, limit: 2 },
+      { name: 'Aq-BI Soln 10% 200ml/bt', controlled: false, limit: 5 },
+    ]},
+    { title: '大量點滴', drugs: [
+      { name: '0.9% Saline 20ml/amp', controlled: false, limit: 70 },
+      { name: 'Aq-dest 20ml/amp', controlled: false, limit: 20 },
+    ]},
+  ]},
+};
+
+const CHECK_ITEMS = [
+  '管制藥品依規定儲存於管制藥品專用藥櫃內，並隨時上鎖。',
+  '管制藥品落實每日盤點且針劑空瓶確實回收',
+  '管制藥品使用紀錄完整且與空瓶數量符合',
+  '藥品存放區依種類區隔放置並標示清楚、整齊乾淨',
+  '藥用冰箱未放置食物且每日進行溫度監測並記錄清楚',
+  '已開封藥品應標示開封日期，且未超過開封保存期限',
+  '易碎藥品與大瓶點滴疊放高度須於100公分以下',
+];
+
+// ── STORAGE ──
+let auditRecords = [];
+
+async function loadRecords() {
+  try {
+    const result = await window.storage.get('auditRecords', true);
+    auditRecords = result ? JSON.parse(result.value) : [];
+  } catch(e) { auditRecords = []; }
+}
+
+async function saveRecords() {
+  try {
+    await window.storage.set('auditRecords', JSON.stringify(auditRecords), true);
+  } catch(e) {
+    // fallback to localStorage
+    try { localStorage.setItem('auditRecords', JSON.stringify(auditRecords)); } catch(e2) {}
+  }
+}
+
+// ── PIN ──
+const DEFAULT_PIN = '1234';
+let adminUnlocked = false;
+
+function getPin() {
+  try { return localStorage.getItem('adminPin') || DEFAULT_PIN; }
+  catch(e) { return DEFAULT_PIN; }
+}
+
+function requestAdmin() {
+  if (adminUnlocked) { _showAdminPage(); return; }
+  document.getElementById('pin-input').value = '';
+  document.getElementById('pin-error').textContent = '';
+  document.getElementById('pin-modal').classList.add('open');
+  setTimeout(() => document.getElementById('pin-input').focus(), 100);
+}
+
+function checkPin() {
+  const val = document.getElementById('pin-input').value.trim();
+  if (val === getPin()) {
+    adminUnlocked = true;
+    document.getElementById('pin-modal').classList.remove('open');
+    _showAdminPage();
+  } else {
+    document.getElementById('pin-error').textContent = 'PIN 碼錯誤，請再試一次';
+    document.getElementById('pin-input').value = '';
+    document.getElementById('pin-input').focus();
+  }
+}
+
+function closePinModal() { document.getElementById('pin-modal').classList.remove('open'); }
+
+function lockAdmin() {
+  adminUnlocked = false;
+  showPage('form');
+  toast('後台已鎖定');
+}
+
+function changePinCode() {
+  const oldVal = document.getElementById('pin-old').value.trim();
+  const newVal = document.getElementById('pin-new').value.trim();
+  const confirmVal = document.getElementById('pin-confirm').value.trim();
+  const errEl = document.getElementById('pin-change-error');
+  if (oldVal !== getPin()) { errEl.textContent = '目前 PIN 碼錯誤'; return; }
+  if (!/^\d{4,8}$/.test(newVal)) { errEl.textContent = '新 PIN 碼需為 4–8 碼純數字'; return; }
+  if (newVal !== confirmVal) { errEl.textContent = '兩次輸入的新 PIN 碼不一致'; return; }
+  try { localStorage.setItem('adminPin', newVal); } catch(e) {}
+  document.getElementById('pin-change-modal').classList.remove('open');
+  errEl.textContent = '';
+  toast('PIN 碼已更新！', 'success');
+}
+
+function _showAdminPage() {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-admin').classList.add('active');
+  document.getElementById('btn-admin').classList.add('active');
+  renderAdmin();
+}
+
+function showPage(p) {
+  if (p === 'admin') { requestAdmin(); return; }
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  document.getElementById('btn-' + p).classList.add('active');
+}
+
+// ── FORM RENDERING ──
+function renderDrugSection() {
+  const unit = document.getElementById('f-unit').value;
+  const ds = document.getElementById('drug-section');
+  const showSections = ['check-section','remarks-section','followup-section','sig-section'];
+
+  if (!unit || !UNITS_DATA[unit]) {
+    ds.innerHTML = '';
+    showSections.forEach(id => document.getElementById(id).style.display = 'none');
+    return;
+  }
+  showSections.forEach(id => document.getElementById(id).style.display = '');
+
+  const data = UNITS_DATA[unit];
+  let html = `<div class="card"><div class="card-title">藥品盤點清單</div>`;
+
+  data.sections.forEach((sec, si) => {
+    html += `<div class="drug-section-header">${sec.title}</div>`;
+
+    // Mobile cards
+    sec.drugs.forEach((d, di) => {
+      const id = `d_${si}_${di}`;
+      html += `<div class="drug-card">
+        <div class="drug-card-name ${d.controlled ? 'controlled' : ''}">
+          ${d.name} <span class="limit-badge">上限 ${d.limit}</span>
+        </div>
+        <div class="drug-fields">
+          <div class="drug-field">
+            <div class="drug-field-label">實際數量</div>
+            <input type="number" id="${id}_actual" min="0" placeholder="0" inputmode="numeric">
+          </div>
+          <div class="drug-field">
+            <div class="drug-field-label">效期(否→填YYYY/MM)</div>
+            <input type="text" id="${id}_expdate" placeholder="YYYY/MM" inputmode="numeric">
+          </div>
+        </div>
+        <div class="drug-fields" style="margin-top:8px">
+          <div class="drug-field">
+            <div class="drug-field-label">效期 &gt;6個月</div>
+            <div class="radio-toggle-group exp">
+              <input type="radio" name="${id}_exp" id="${id}_exp_y" value="是"><label for="${id}_exp_y">是</label>
+              <input type="radio" name="${id}_exp" id="${id}_exp_n" value="否"><label for="${id}_exp_n">否</label>
+            </div>
+          </div>
+          <div class="drug-field">
+            <div class="drug-field-label">外觀品質</div>
+            <div class="radio-toggle-group pkg">
+              <input type="radio" name="${id}_pkg" id="${id}_pkg_ok" value="正常"><label for="${id}_pkg_ok">正常</label>
+              <input type="radio" name="${id}_pkg" id="${id}_pkg_c" value="污染"><label for="${id}_pkg_c">污染</label>
+              <input type="radio" name="${id}_pkg" id="${id}_pkg_b" value="破損"><label for="${id}_pkg_b">破損</label>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    });
+
+    // Desktop table
+    html += `<div class="drug-table-wrap"><table class="drug-table">
+      <thead><tr>
+        <th style="width:36%">藥名</th><th>常備上限</th><th>實際數量</th>
+        <th>效期&gt;6個月</th><th>否(YYYY/MM)</th><th>外觀品質</th>
+      </tr></thead><tbody>`;
+    sec.drugs.forEach((d, di) => {
+      const id = `d_${si}_${di}`;
+      html += `<tr>
+        <td><span class="drug-name ${d.controlled ? 'controlled' : ''}">${d.name}</span></td>
+        <td><span class="limit-badge">${d.limit}</span></td>
+        <td><input type="number" id="${id}_actual_d" min="0" placeholder="0" oninput="syncField('${id}_actual_d','${id}_actual')"></td>
+        <td><div class="table-radio-group">
+          <label><input type="radio" name="${id}_exp_d" value="是" onchange="syncRadio('${id}_exp','是')"> <span style="color:var(--success);font-weight:600">是</span></label>
+          <label><input type="radio" name="${id}_exp_d" value="否" onchange="syncRadio('${id}_exp','否')"> <span style="color:var(--danger);font-weight:600">否</span></label>
+        </div></td>
+        <td><input type="text" id="${id}_expdate_d" placeholder="YYYY/MM" oninput="syncField('${id}_expdate_d','${id}_expdate')"></td>
+        <td><div class="table-radio-group">
+          <label><input type="radio" name="${id}_pkg_d" value="正常" onchange="syncRadio('${id}_pkg','正常')"> <span style="color:var(--success);font-weight:600">正常</span></label>
+          <label><input type="radio" name="${id}_pkg_d" value="污染" onchange="syncRadio('${id}_pkg','污染')"> <span style="color:var(--danger);font-weight:600">污染</span></label>
+          <label><input type="radio" name="${id}_pkg_d" value="破損" onchange="syncRadio('${id}_pkg','破損')"> <span style="color:var(--danger);font-weight:600">破損</span></label>
+        </div></td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+  });
+  html += `</div>`;
+  ds.innerHTML = html;
+
+  // Check items
+  let chkHtml = '';
+  CHECK_ITEMS.forEach((item, i) => {
+    chkHtml += `<div class="check-item-card">
+      <div class="check-item-text">${i+1}. ${item}</div>
+      <div class="check-item-controls">
+        <div class="check-item-row">
+          <div class="check-radio-group" style="flex:1">
+            <input type="radio" name="chk_${i}" id="chk_${i}_y" value="是"><label for="chk_${i}_y">是</label>
+            <input type="radio" name="chk_${i}" id="chk_${i}_n" value="否"><label for="chk_${i}_n">否</label>
+            <input type="radio" name="chk_${i}" id="chk_${i}_na" value="不適用"><label for="chk_${i}_na">不適用</label>
+          </div>
+        </div>
+        <div class="check-item-remark">
+          <input type="text" id="chk_remark_${i}" placeholder="備註...">
+        </div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('check-items-container').innerHTML = chkHtml;
+
+  // Init one followup row
+  if (!document.querySelector('.fu-row')) addFollowupRow();
+}
+
+// sync desktop ↔ mobile fields
+function syncField(fromId, toId) {
+  const from = document.getElementById(fromId);
+  const to = document.getElementById(toId);
+  if (from && to) to.value = from.value;
+}
+function syncRadio(name, val) {
+  const el = document.querySelector(`input[name="${name}"][value="${val}"]`);
+  if (el) el.checked = true;
+}
+
+// ── FOLLOW-UP ──
+function addFollowupRow() {
+  const container = document.getElementById('followup-rows');
+  const div = document.createElement('div');
+  div.className = 'fu-row';
+  div.innerHTML = `
+    <button class="fu-delete" onclick="removeFollowupRow(this)">✕</button>
+    <div class="form-group" style="padding-right:36px">
+      <label>追蹤事項</label>
+      <input type="text" class="fu-item" placeholder="請描述需追蹤的事項...">
+    </div>
+    <div class="fu-row-grid">
+      <div class="form-group">
+        <label>預計完成日期</label>
+        <input type="date" class="fu-due">
+      </div>
+      <div class="form-group">
+        <label>追蹤狀態</label>
+        <select class="fu-status">
+          <option value="待處理">待處理</option>
+          <option value="處理中">處理中</option>
+          <option value="已完成">已完成</option>
+          <option value="不適用">不適用</option>
+        </select>
+      </div>
+    </div>`;
+  container.appendChild(div);
+}
+
+function removeFollowupRow(btn) {
+  const rows = document.querySelectorAll('.fu-row');
+  if (rows.length > 1) btn.closest('.fu-row').remove();
+  else btn.closest('.fu-row').querySelector('.fu-item').value = '';
+}
+
+// ── SUBMIT ──
+async function submitAudit() {
+  const unit = document.getElementById('f-unit').value;
+  const date = document.getElementById('f-date').value;
+  const auditNum = document.getElementById('f-audit-num').value;
+  if (!unit) { toast('請選擇查核單位', 'danger'); return; }
+  if (!date) { toast('請填寫查核日期', 'danger'); return; }
+
+  const sigs = {
+    staff: document.getElementById('s-staff').value,
+    unitMgr: document.getElementById('s-unit-mgr').value,
+    pharmacist: document.getElementById('s-pharmacist').value,
+    auditMgr: document.getElementById('s-audit-mgr').value,
+  };
+
+  const followups = [];
+  document.querySelectorAll('.fu-row').forEach(row => {
+    const item = row.querySelector('.fu-item').value.trim();
+    if (item) followups.push({ item, due: row.querySelector('.fu-due').value, status: row.querySelector('.fu-status').value });
+  });
+
+  const unitData = UNITS_DATA[unit];
+  const drugs = [];
+  let hasIssue = false;
+  unitData.sections.forEach((sec, si) => {
+    sec.drugs.forEach((d, di) => {
+      const id = `d_${si}_${di}`;
+      const actual = document.getElementById(id + '_actual')?.value || '';
+      const expOk = document.querySelector(`input[name="${id}_exp"]:checked`)?.value || '';
+      const expDate = document.getElementById(id + '_expdate')?.value || '';
+      const pkgOk = document.querySelector(`input[name="${id}_pkg"]:checked`)?.value || '';
+      if (pkgOk === '污染' || pkgOk === '破損' || expOk === '否') hasIssue = true;
+      if (actual && parseInt(actual) > d.limit) hasIssue = true;
+      drugs.push({ name: d.name, controlled: d.controlled, limit: d.limit, section: sec.title, actual, expOk, expDate, pkgOk });
+    });
+  });
+
+  const checks = CHECK_ITEMS.map((item, i) => ({
+    item,
+    result: document.querySelector(`input[name="chk_${i}"]:checked`)?.value || '',
+    remark: document.getElementById(`chk_remark_${i}`)?.value || '',
+  }));
+  if (checks.some(c => c.result === '否')) hasIssue = true;
+
+  const record = {
+    id: Date.now(), unit, date, auditNum: parseInt(auditNum),
+    drugs, checks, sigs, remarks: document.getElementById('f-remarks').value,
+    followups, hasIssue, createdAt: new Date().toISOString(),
+  };
+
+  const btn = document.querySelector('[onclick="submitAudit()"]');
+  btn.textContent = '儲存中...';
+  btn.disabled = true;
+
+  auditRecords.push(record);
+  await saveRecords();
+  btn.innerHTML = '💾 送出稽核表';
+  btn.disabled = false;
+  toast('稽核表已儲存！', 'success');
+
+  setTimeout(() => requestAdmin(), 1200);
+}
+
+function resetForm() {
+  if (!confirm('確定要清除表單內容嗎？')) return;
+  document.getElementById('f-unit').value = '';
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('f-audit-num').value = '1';
+  document.getElementById('drug-section').innerHTML = '';
+  ['check-section','remarks-section','followup-section','sig-section'].forEach(id => document.getElementById(id).style.display = 'none');
+  ['s-staff','s-unit-mgr','s-pharmacist','s-audit-mgr','f-remarks'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  document.getElementById('followup-rows').innerHTML = '';
+}
+
+// ── ADMIN ──
+async function renderAdmin() {
+  await loadRecords();
+  renderStats();
+  renderAdminList();
+  renderAnalysis();
+}
+
+function renderStats() {
+  const total = auditRecords.length;
+  const issues = auditRecords.filter(r => r.hasIssue).length;
+  const units = [...new Set(auditRecords.map(r => r.unit))].length;
+  const thisMonth = auditRecords.filter(r => r.date && r.date.slice(0,7) === new Date().toISOString().slice(0,7)).length;
+  document.getElementById('admin-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">稽核總次數</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--success)">${total - issues}</div><div class="stat-label">無問題</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--danger)">${issues}</div><div class="stat-label">有問題</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--warning)">${units}</div><div class="stat-label">已稽核單位</div></div>
+    <div class="stat-card"><div class="stat-num">${thisMonth}</div><div class="stat-label">本月稽核</div></div>`;
+}
+
+function getFiltered() {
+  const fUnit = document.getElementById('filter-unit').value;
+  const fNum = document.getElementById('filter-audit-num').value;
+  const fFrom = document.getElementById('filter-date-from').value;
+  const fTo = document.getElementById('filter-date-to').value;
+  return auditRecords.filter(r => {
+    if (fUnit && r.unit !== fUnit) return false;
+    if (fNum && r.auditNum != fNum) return false;
+    if (fFrom && r.date < fFrom) return false;
+    if (fTo && r.date > fTo) return false;
+    return true;
+  });
+}
+
+function renderAdminList() {
+  const records = getFiltered();
+  const container = document.getElementById('admin-list');
+  if (!records.length) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>目前尚無稽核記錄</p></div>`;
+    return;
+  }
+  const sorted = [...records].sort((a,b) => b.date.localeCompare(a.date));
+  container.innerHTML = `<div class="record-list">${sorted.map(r => `
+    <div class="record-item">
+      <div class="record-item-top">
+        <span class="record-badge ${r.hasIssue ? 'badge-issue' : 'badge-done'}">${r.hasIssue ? '⚠ 有問題' : '✓ 無問題'}</span>
+        <span class="record-unit">${r.unit}</span>
+        <span class="audit-number-badge">第 ${r.auditNum} 次</span>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <span class="record-meta">📅 ${r.date}</span>
+        <span class="record-meta">稽核藥師：${r.sigs?.pharmacist || '—'}</span>
+      </div>
+      <div class="record-item-btns no-print">
+        <button class="btn btn-outline" onclick="showDetail(${r.id})">詳細</button>
+        <button class="btn btn-danger" onclick="deleteRecord(${r.id})">刪除</button>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function renderAnalysis() {
+  if (!auditRecords.length) {
+    document.getElementById('analysis-content').innerHTML = `<div class="empty-state"><p>尚無數據可分析</p></div>`;
+    return;
+  }
+  const unitMap = {};
+  auditRecords.forEach(r => {
+    if (!unitMap[r.unit]) unitMap[r.unit] = { total: 0, ok: 0, issues: [] };
+    unitMap[r.unit].total++;
+    if (!r.hasIssue) unitMap[r.unit].ok++;
+    else {
+      r.checks.filter(c => c.result === '否').forEach(c => unitMap[r.unit].issues.push(c.item.slice(0,10) + '...'));
+      r.drugs.filter(d => d.pkgOk === '污染' || d.pkgOk === '破損').forEach(() => unitMap[r.unit].issues.push('藥品品質異常'));
+    }
+  });
+  let html = `<p style="font-size:13px;color:var(--text-muted);margin-bottom:14px">各單位稽核合格率</p>`;
+  Object.entries(unitMap).sort((a,b) => b[1].ok/b[1].total - a[1].ok/a[1].total).forEach(([unit, v]) => {
+    const pct = Math.round(v.ok / v.total * 100);
+    const cls = pct >= 80 ? 'bar-ok' : pct >= 50 ? 'bar-warn' : 'bar-err';
+    const uniqIssues = [...new Set(v.issues)].slice(0,2);
+    html += `<div class="analysis-bar">
+      <span class="bar-label">${unit}</span>
+      <div class="bar-track"><div class="bar-fill ${cls}" style="width:${pct}%"></div></div>
+      <span class="bar-pct">${pct}%</span>
+      <span style="font-size:11px;color:var(--text-muted)">${v.total}次</span>
+      ${uniqIssues.map(i => `<span class="issue-tag">${i}</span>`).join('')}
+    </div>`;
+  });
+  const checkCounts = CHECK_ITEMS.map((item, i) => ({
+    item, no: auditRecords.reduce((sum, r) => sum + (r.checks[i]?.result === '否' ? 1 : 0), 0)
+  })).filter(c => c.no > 0).sort((a,b) => b.no - a.no);
+  if (checkCounts.length) {
+    html += `<p style="font-size:13px;color:var(--text-muted);margin:18px 0 10px">最常出現問題的稽核項目</p>`;
+    checkCounts.forEach(c => {
+      html += `<div style="display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid #f0eeea;font-size:13px">
+        <span class="issue-tag" style="white-space:nowrap">✗ ${c.no}次</span>
+        <span style="line-height:1.4">${c.item}</span></div>`;
+    });
+  }
+  document.getElementById('analysis-content').innerHTML = html;
+}
+
+function showDetail(id) {
+  const r = auditRecords.find(x => x.id === id);
+  if (!r) return;
+  let html = `<h2 style="font-size:17px;font-weight:700;color:var(--primary);margin-bottom:4px">
+    ${r.unit} <span class="audit-number-badge">第 ${r.auditNum} 次</span></h2>
+  <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px">查核日期：${r.date}</p>
+  <div class="sig-grid" style="margin-bottom:16px">
+    <div class="sig-box"><div class="sig-label">單位人員</div><div style="padding:6px 0;font-size:14px">${r.sigs?.staff||'—'}</div></div>
+    <div class="sig-box"><div class="sig-label">單位主管</div><div style="padding:6px 0;font-size:14px">${r.sigs?.unitMgr||'—'}</div></div>
+    <div class="sig-box"><div class="sig-label">稽核藥師</div><div style="padding:6px 0;font-size:14px">${r.sigs?.pharmacist||'—'}</div></div>
+    <div class="sig-box"><div class="sig-label">查核主管</div><div style="padding:6px 0;font-size:14px">${r.sigs?.auditMgr||'—'}</div></div>
+  </div>`;
+
+  const sections = {};
+  r.drugs.forEach(d => { if (!sections[d.section]) sections[d.section] = []; sections[d.section].push(d); });
+  html += `<div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:10px">藥品盤點結果</div>`;
+  Object.entries(sections).forEach(([sec, drugs]) => {
+    html += `<div class="drug-section-header">${sec}</div><div style="overflow-x:auto"><table class="drug-table" style="display:table">
+      <thead><tr><th>藥名</th><th>上限</th><th>實際</th><th>效期</th><th>品質</th></tr></thead><tbody>`;
+    drugs.forEach(d => {
+      const actStyle = d.actual && parseInt(d.actual) > d.limit ? 'color:var(--danger);font-weight:700' : '';
+      const pkgStyle = (d.pkgOk==='污染'||d.pkgOk==='破損') ? 'color:var(--danger);font-weight:700' : 'color:var(--success)';
+      const expStyle = d.expOk==='否' ? 'color:var(--danger);font-weight:700' : 'color:var(--success)';
+      html += `<tr><td><span class="drug-name ${d.controlled?'controlled':''}">${d.name}</span></td>
+        <td><span class="limit-badge">${d.limit}</span></td>
+        <td style="${actStyle}">${d.actual||'—'}</td>
+        <td style="${expStyle}">${d.expOk||'—'}${d.expDate?' ('+d.expDate+')':''}</td>
+        <td style="${pkgStyle}">${d.pkgOk||'—'}</td></tr>`;
+    });
+    html += `</tbody></table></div>`;
+  });
+
+  html += `<div style="font-size:14px;font-weight:700;color:var(--primary);margin:14px 0 10px">稽核項目</div>`;
+  r.checks.forEach(c => {
+    const style = c.result==='否' ? 'color:var(--danger);font-weight:700' : c.result==='是' ? 'color:var(--success)' : 'color:var(--text-muted)';
+    html += `<div style="display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #f0eeea;font-size:13px">
+      <span style="${style};white-space:nowrap;min-width:40px">${c.result||'—'}</span>
+      <span style="line-height:1.4">${c.item}${c.remark ? '<br><span style="color:var(--text-muted);font-size:12px">備註：'+c.remark+'</span>' : ''}</span>
+    </div>`;
+  });
+
+  if (r.remarks) html += `<div style="font-size:14px;font-weight:700;color:var(--primary);margin:14px 0 8px">改善事項</div>
+    <div style="background:var(--warning-light);border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.6">${r.remarks}</div>`;
+
+  if (r.followups?.length) {
+    const statusColor = { '待處理':'var(--danger)','處理中':'var(--warning)','已完成':'var(--success)','不適用':'var(--text-muted)' };
+    const statusBg = { '待處理':'var(--danger-light)','處理中':'var(--warning-light)','已完成':'var(--success-light)','不適用':'var(--gray-light)' };
+    html += `<div style="font-size:14px;font-weight:700;color:var(--primary);margin:14px 0 10px">後續追蹤</div>`;
+    r.followups.forEach(f => {
+      html += `<div style="border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:13px">
+        <div style="font-weight:600;margin-bottom:4px">${f.item}</div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          ${f.due ? `<span style="color:var(--text-muted);font-size:12px">預計完成：${f.due}</span>` : ''}
+          <span style="background:${statusBg[f.status]||'var(--gray-light)'};color:${statusColor[f.status]||'var(--text-muted)'};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">${f.status}</span>
+        </div>
+      </div>`;
+    });
+  }
+
+  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('detail-modal').classList.add('open');
+  document.getElementById('detail-modal').scrollTop = 0;
+}
+
+function closeModal() { document.getElementById('detail-modal').classList.remove('open'); }
+
+async function deleteRecord(id) {
+  if (!confirm('確定要刪除此稽核記錄？')) return;
+  auditRecords = auditRecords.filter(r => r.id !== id);
+  await saveRecords();
+  renderAdmin();
+  toast('記錄已刪除');
+}
+
+function resetFilters() {
+  ['filter-unit','filter-audit-num','filter-date-from','filter-date-to'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value='';
+  });
+  renderAdminList();
+}
+
+// ── EXPORT / IMPORT ──
+function exportData() {
+  const blob = new Blob([JSON.stringify(auditRecords, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `audit_records_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  toast('資料匯出完成', 'success');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!Array.isArray(data)) throw new Error('格式錯誤');
+      if (!confirm(`將匯入 ${data.length} 筆記錄，確定繼續？`)) return;
+      auditRecords = data;
+      await saveRecords();
+      renderAdmin();
+      toast(`已匯入 ${data.length} 筆記錄`, 'success');
+    } catch(err) {
+      toast('匯入失敗：檔案格式不正確', 'danger');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ── TOAST ──
+function toast(msg, type = '') {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ── INIT ──
+document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+
+document.getElementById('detail-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.getElementById('pin-modal').addEventListener('click', function(e) {
+  if (e.target === this) closePinModal();
+});
+
+(async () => { await loadRecords(); })();
+</script>
+</body>
+</html>
